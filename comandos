@@ -1,0 +1,37 @@
+comandos
+
+#Inserção tb_produto
+INSERT INTO "main"."tb_produto"("cod","descricao","peso") VALUES (2,'','');
+
+#Inserção tb_espelho e tb_espelho_detalhado
+INSERT INTO 
+"main"."tb_espelho"("espelho","volume_previsto","peso_previsto","volume_real","peso_real") 
+VALUES ('999224',1500,3000.000,0,0.0);
+
+
+
+
+INSERT INTO "main"."tb_espelho_detalhado"
+("tb_produto_cod", "tb_espelho_espelho", "volume_previsto", "peso_previsto", "volume_real", "peso_real")
+VALUES (113, '999111', 1500, 3000, 0, 0);
+
+
+INSERT INTO 
+"main"."tb_espelho"("espelho","volume_previsto","peso_previsto","volume_real","peso_real") 
+VALUES ('999225',0,0.0,0,0.0);
+
+INSERT INTO "main"."tb_espelho_detalhado"
+("tb_produto_cod", "tb_espelho_espelho", "volume_previsto", "peso_previsto", "volume_real", "peso_real")
+VALUES (114, '999225', 500, 10000, 0, 0);
+
+UPDATE "main"."tb_espelho" 
+SET "volume_previsto"= (SELECT sum(volume_previsto) FROM tb_espelho_detalhado WHERE tb_espelho_espelho = '999225'),
+	"peso_previsto"= (SELECT sum(peso_previsto) FROM tb_espelho_detalhado WHERE tb_espelho_espelho = '999225')
+WHERE "espelho"='999225'
+
+SELECT * FROM tb_espelho;
+
+SELECT * FROM tb_espelho_detalhado WHERE tb_espelho_espelho = '999225';
+
+SELECT sum(volume_previsto), sum(peso_previsto) FROM tb_espelho_detalhado WHERE tb_espelho_espelho = '999225';
+
