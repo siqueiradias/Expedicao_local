@@ -7,13 +7,11 @@ import datetime
 import os
 import sys
 
+from cadastrar_espelho_db import *
 
 class Window(QtWidgets.QMainWindow):
     def __init__(self):
         super(Window, self).__init__()
-        self._lista_etiquetas = list()
-        self._DB = 'BD_EXPEDICAO.db'
-        #self._banco = factory_db(self.get_banco_dados())
         uic.loadUi("tela_cadastro.ui", self)
         
         #MENU
@@ -24,25 +22,39 @@ class Window(QtWidgets.QMainWindow):
 
 
         #BOTÕES
-        self.btn_adicionar.clicked.connect(self.preencher_tabela)
+        self.btn_adicionar.clicked.connect(self.inserir_tabela)
+        self.btn_remover.clicked.connect(self.remover_tabela)
         #self.btn_cadastrar.clicked.connect()
 
-    def alterar_label(self):
-        self.lbl_descricao.setText(self.txt_cod.text())
-        self.lbl_peso.setText(self.txt_volumes.text())
+    def _buscar_dados(self):
+        cadastrar_espelho_db().buscar(self.txt_cod.text())
 
-    def preencher_tabela(self):
-        #self.tbl_resumo = QTableWidget()
-        lista = []
-        lista.append((self.txt_cod.text(), self.txt_volumes.text(), self.lbl_descricao.text(), self.lbl_peso.text()))
-        #print(help(self.tbl_resumo))
+    def _salvar_dados(self):
+        pass
+
+    def alterar_label(self):
+        dados = cadastrar_espelho_db().buscar(self.txt_cod.text())
+        try:
+            print("oi")
+            self.lbl_descricao.setText(dados[1])
+            print(dados[2])
+            self.lbl_peso.setText(str(float(dados[2]*int(self.txt_volumes.text()))))
+        except Exception as identifier:
+            pass
+        
+
+    def inserir_tabela(self):
+        rowCount = self.tbl_resumo.rowCount()
+        self.tbl_resumo.insertRow(rowCount)
         # add more if there is more columns in the database.
-        print("oi")
-        print(lista)
-        self.tbl_resumo.setItem(0, 0, QtWidgets.QTableWidgetItem(self.txt_cod.text()))
-        self.tbl_resumo.setItem(0, 1, QtWidgets.QTableWidgetItem(self.txt_volumes.text()))
-        self.tbl_resumo.setItem(0, 2, QtWidgets.QTableWidgetItem(self.lbl_descricao.text()))
-        self.tbl_resumo.setItem(0, 3, QtWidgets.QTableWidgetItem(self.lbl_peso.text()))
+        self.tbl_resumo.setItem(rowCount, 0, QtWidgets.QTableWidgetItem(self.txt_cod.text()))
+        self.tbl_resumo.setItem(rowCount, 1, QtWidgets.QTableWidgetItem(self.lbl_descricao.text()))
+        self.tbl_resumo.setItem(rowCount, 2, QtWidgets.QTableWidgetItem(self.txt_volumes.text()))
+        self.tbl_resumo.setItem(rowCount, 3, QtWidgets.QTableWidgetItem(self.lbl_peso.text()))
+    
+    def remover_tabela(self):
+        if self.tbl_resumo.rowCount() > 0:
+            self.tbl_resumo.removeRow(self.tbl_resumo.currentRow())
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
