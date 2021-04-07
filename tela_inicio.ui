@@ -6,9 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>591</width>
-    <height>270</height>
+    <width>550</width>
+    <height>250</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>550</width>
+    <height>250</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Sistema de Expedição Local</string>
@@ -17,36 +29,48 @@
    <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>170</y>
+      <x>20</x>
+      <y>160</y>
       <width>511</width>
       <height>80</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="pushButton_3">
+      <widget class="QPushButton" name="btn_cadastrar">
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
         <string>Cadastrar</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="btn_abrir">
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
         <string>Abrir</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="btn_exportar">
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
         <string>Exportar</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_4">
+      <widget class="QPushButton" name="btn_sair">
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
         <string>Sair</string>
        </property>
@@ -58,20 +82,20 @@
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>110</y>
+      <y>90</y>
       <width>71</width>
-      <height>16</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt;&quot;&gt;Espelho:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="txtEspelho">
+   <widget class="QLineEdit" name="txt_espelho">
     <property name="geometry">
      <rect>
       <x>110</x>
-      <y>100</y>
+      <y>90</y>
       <width>181</width>
       <height>28</height>
      </rect>
@@ -83,8 +107,8 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>10</y>
+      <x>-10</x>
+      <y>0</y>
       <width>591</width>
       <height>41</height>
      </rect>
@@ -94,6 +118,7 @@
       <widget class="QLabel" name="label">
        <property name="styleSheet">
         <string notr="true">background-color: rgb(158, 158, 158);
+background-color: rgb(45, 45, 45);
 color: rgb(255, 255, 255);</string>
        </property>
        <property name="text">
