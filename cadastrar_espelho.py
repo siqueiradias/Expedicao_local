@@ -38,10 +38,14 @@ class Window(QtWidgets.QMainWindow):
             print("oi")
             self.lbl_descricao.setText(dados[1])
             print(dados[2])
-            self.lbl_peso.setText(str(float(dados[2]*int(self.txt_volumes.text()))))
+            self.lbl_peso.setText(f"{float(dados[2]*int(self.txt_volumes.text())):.3f} KG")
         except Exception as identifier:
             pass
-        
+    
+    def pegar_valor(self):
+        print("eita")
+        lista = self.tbl_resumo.itemAt(1, 1).text()
+        print(lista)
 
     def inserir_tabela(self):
         rowCount = self.tbl_resumo.rowCount()
@@ -50,8 +54,9 @@ class Window(QtWidgets.QMainWindow):
         self.tbl_resumo.setItem(rowCount, 0, QtWidgets.QTableWidgetItem(self.txt_cod.text()))
         self.tbl_resumo.setItem(rowCount, 1, QtWidgets.QTableWidgetItem(self.lbl_descricao.text()))
         self.tbl_resumo.setItem(rowCount, 2, QtWidgets.QTableWidgetItem(self.txt_volumes.text()))
-        self.tbl_resumo.setItem(rowCount, 3, QtWidgets.QTableWidgetItem(self.lbl_peso.text()))
-    
+        self.tbl_resumo.setItem(rowCount, 3, QtWidgets.QTableWidgetItem(self.lbl_peso.text().replace(' KG','')))
+        self.pegar_valor()
+
     def remover_tabela(self):
         if self.tbl_resumo.rowCount() > 0:
             self.tbl_resumo.removeRow(self.tbl_resumo.currentRow())
