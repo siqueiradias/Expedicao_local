@@ -21,7 +21,8 @@ class Window(QtWidgets.QMainWindow):
 
 
         #BOTÕES
-        self.btn_adicionar.clicked.connect(self.btn_adicionar)
+        self.btn_adicionar.clicked.connect(self.adicionar)
+        self.btn_salvar.clicked.connect(self.salvar)
         self.btn_remover.clicked.connect(self.remover_tabela)
         #self.btn_cadastrar.clicked.connect()
 
@@ -36,14 +37,66 @@ class Window(QtWidgets.QMainWindow):
         print(dados)
         try:
             self.lbl_descricao.setText(dados[1])
-            print(dados[2])
             self.lbl_peso.setText(f"{float(dados[2]*int(self.txt_volumes.text())):.3f} KG")
         except Exception as identifier:
             pass
     
     def pegar_valor(self):
-        lista = self.tbl_resumo.itemAt(1, 1).text()
-        print(lista)
+        volume_geral = 0
+        peso_geral = float(0.0)
+        cont = 0
+        lista_espelho_detalhado = []
+        while cont < self.tbl_resumo.rowCount():
+            volume_geral += int(self.tbl_resumo.item(cont, 2).text())
+            peso_geral += float(self.tbl_resumo.item(cont, 3).text())
+            #print(f"Espelho {self.lbl_espelho.text()} \
+            #    | Cod.: {self.tbl_resumo.item(cont, 0).text()}\
+            #     | Volumes {self.tbl_resumo.item(cont, 2).text()} |\
+            #      Peso {self.tbl_resumo.item(cont, 3).text()}")
+            lista_espelho_detalhado.append((int(self.tbl_resumo.item(cont, 0).text()),\
+                self.lbl_espelho.text(),\
+                     int(self.tbl_resumo.item(cont, 2).text()),\
+                         float(self.tbl_resumo.item(cont, 3).text()),\
+                             0,\
+                                 float(0.0)))
+            cont += 1
+        #print('-'*100)
+        #print(f"Espelho {self.lbl_espelho.text()} \
+        #        | Volume Prev.: {volume_geral}\
+        #         | Peso Prev. {peso_geral}")
+        #print('+'*100)
+        #for item in lista_espelho_detalhado:
+        #    print(item)
+        #print('-'*100)
+        lista_espelho = [self.lbl_espelho.text(), volume_geral, peso_geral]
+        return [lista_espelho, lista_espelho_detalhado]
+
+    def salvar(self):
+        dados = self.pegar_valor()
+        print(dados[0])
+        for item in dados[1]:
+            print(item)
+        try:
+            salvar_dados = cadastrar_espelho_db()
+            salvar_dados.inserir_espelho(dados[0])
+            for item in dados[1]:
+                salvar_dados.inserir_espelho_detalhado(item)
+        except Exception as e:
+            print('Erro ao SALVAR os dados dos espelho: ', e)
+
+    def adicionar(self):
+        if self.verificar_tabela():
+            print("Produto já adicionado!!!")
+        else:
+            self.inserir_tabela()
+
+    def verificar_tabela(self):
+        cont = 0
+        while cont < self.tbl_resumo.rowCount():
+            if self.tbl_resumo.item(cont, 0).text() == self.txt_cod.text():
+                return(True)
+            cont += 1
+        return False
 
     def inserir_tabela(self):
         rowCount = self.tbl_resumo.rowCount()

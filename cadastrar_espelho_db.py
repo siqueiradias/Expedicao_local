@@ -26,6 +26,15 @@ class cadastrar_espelho_db:
 
 
     # Larger example that inserts many records at a time
-    def inserir (self, produto):
-        self._cur.executemany('INSERT INTO tb_geral VALUES (?,?,?,?,?,?,?)', [produto])
+    def inserir_espelho (self, espelho):
+        self._cur.executemany("""
+        'main'.'tb_espelho'('espelho','volume_previsto','peso_previsto','volume_real','peso_real') 
+VALUES (?,?,?,?,?);""", [espelho])
+        self._con.commit()
+
+    def inserir_espelho_detalhado (self, espelho_detalhado):
+        self._cur.executemany("""
+        INSERT INTO 'main'.'tb_espelho_detalhado'
+('tb_produto_cod', 'tb_espelho_espelho', 'volume_previsto', 'peso_previsto', 'volume_real', 'peso_real')
+VALUES (?, ?, ?, ?, ?, ?);""", [espelho_detalhado])
         self._con.commit()
