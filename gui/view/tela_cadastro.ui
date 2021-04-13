@@ -236,17 +236,17 @@ color: rgb(255, 255, 255);</string>
         <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:600;&quot;&gt;Desc. do Produto&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Desc. do Produto&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="lbl_peso">
        <property name="styleSheet">
-        <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;0.000 Kg&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;0.000 Kg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
      </item>
@@ -303,15 +303,23 @@ color: rgb(255, 255, 255);</string>
      </item>
      <item row="0" column="1">
       <widget class="QLabel" name="lbl_geral_volume">
+       <property name="styleSheet">
+        <string notr="true">font: 75 16pt &quot;MS Shell Dlg 2&quot;;
+color: rgb(0, 170, 0);</string>
+       </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#00aa00;&quot;&gt;00 CX&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>0 CX</string>
        </property>
       </widget>
      </item>
      <item row="0" column="3">
       <widget class="QLabel" name="lbl_geral_peso">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(0, 170, 0);
+font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:16pt; font-weight:600; color:#00aa00;&quot;&gt;0,000 KG&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>0.000 KG</string>
        </property>
       </widget>
      </item>

@@ -3,7 +3,7 @@ import os
 
 class factory_db:
     def __init__(self):
-        self._db = 'BD_EXPEDICAO.db'
+        self._db = 'dao/base/BD_EXPEDICAO.db'
         # Cria uma conexão com o banco de dados.
         # Se o banco de dados não existir, ele é criado neste momento.
         self._con = sqlite3.connect(self._db)
