@@ -35,17 +35,20 @@ class Window(QtWidgets.QMainWindow):
     def alterar_label(self):
         dados = cadastrar_espelho_db().buscar(self.txt_cod.text())
         try:
-            print("oi")
             self.lbl_descricao.setText(dados[1])
-            print(dados[2])
             self.lbl_peso.setText(f"{float(dados[2]*int(self.txt_volumes.text())):.3f} KG")
         except Exception as identifier:
             pass
     
     def pegar_valor(self):
-        print("eita")
-        lista = self.tbl_resumo.itemAt(1, 1).text()
-        print(lista)
+        lista = self.tbl_resumo.item(0, 3)
+        cont = 0
+        while cont < self.tbl_resumo.rowCount():
+            print(f"Cod.: {self.tbl_resumo.item(cont, 0).text()}\
+                 | Volumes {self.tbl_resumo.item(cont, 2).text()} |\
+                  Peso {self.tbl_resumo.item(cont, 3).text()}")
+            cont += 1
+
 
     def inserir_tabela(self):
         rowCount = self.tbl_resumo.rowCount()
