@@ -1,4 +1,4 @@
-frase = "1000 kg".capitalize()
+x = '111'
+y = '111'
 
-
-print("1000 kg".replace(' kg',''))
+print(x==y)
