@@ -48,3 +48,16 @@ class leitura_espelho_db:
             conexao.commit()
         except Exception as e:
             print("Erro ao incluir volume: ", e)
+    
+    def consultar_etqtas_lidas(cur_db, espelho, produto):
+        try:
+            result = cur_db.execute(f"""SELECT 
+            COUNT(volume), peso*COUNT(volume)
+             FROM tb_carregamento 
+             INNER JOIN tb_produto on cod = produto
+              WHERE espelho = '{espelho}' and produto = {produto};"""
+            for busca in result:
+                return busca
+        except Exception as e:
+            print("Erro ao fazer a busca pelo volumes lidos: ", e)
+            
