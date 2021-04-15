@@ -17,26 +17,37 @@ class Window(QtWidgets.QMainWindow):
         self.inserir_tabela(leitura_espelho_db.buscar(self._banco.get_cursor(), self._espelho))
         self.atualizar_label_geral()
 
-        #MENU
-        #self.txt_cod.textChanged.connect(self.alterar_label)
-        #self.txt_volumes.textChanged.connect(self.alterar_label)
-
         #BOTÕES
+        self.txt_entrada.returnPressed.connect(self.adicionar)
         self.btn_adicionar.clicked.connect(self.adicionar)
-        #self.btn_salvar.clicked.connect(self.salvar)
-        #self.btn_remover.clicked.connect(self.remover_tabela)
-        #self.btn_cadastrar.clicked.connect()
-    
+
     def adicionar(self):
-        etiqueta = self.txt_entrada.text()
-        produto = int(etiqueta[4:8])
-        volume = (etiqueta, self._espelho, produto)
-        self.txt_entrada.setText('')
-        print(volume)
-        leitura_espelho_db.inserir_volume(self._banco.get_cursor(),\
-             self._banco.get_conexao(),\
-                  etiqueta, self._espelho,\
-                       produto)
+        try:
+            etiqueta = self.txt_entrada.text()
+            produto = int(etiqueta[4:8])
+            volume = (etiqueta, self._espelho, produto)
+            self.txt_entrada.setText('')
+            
+            if leitura_espelho_db.inserir_volume(self._banco.get_cursor(),\
+                self._banco.get_conexao(),\
+                    etiqueta, self._espelho,\
+                        produto):
+                volume_real, peso_real = leitura_espelho_db.buscar_qtde_etqta_lida(self._banco.get_cursor(),\
+                self._espelho, produto)
+                leitura_espelho_db.atualizar_espelho_lido(self._banco.get_cursor(),\
+                self._banco.get_conexao(), self._espelho, produto, volume_real, peso_real)
+            else:
+                print("Não permitido")
+
+            self.atualizar_label_geral()
+            self.atualizar_tabela()
+        except Exception as e:
+            self.txt_entrada.setText('')
+            print("Erro ao adicionar a etiqueta: ", e)
+    
+    def atualizar_tabela(self):
+        self.tbl_resumo.setRowCount(0)
+        self.inserir_tabela(leitura_espelho_db.buscar(self._banco.get_cursor(), self._espelho))
 
     def inserir_tabela(self, dados):
         rowCount = self.tbl_resumo.rowCount()

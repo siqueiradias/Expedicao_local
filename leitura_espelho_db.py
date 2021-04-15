@@ -31,12 +31,20 @@ class leitura_espelho_db:
             r = (0, 0.0, 0, 0.0)
             return r
         
-
-    """Atualiza o valor de acertos de uma das colunas de 'aertosXX'"""
-    def atualizar(self, cur, con, id, colunaAcertos, nAcertos):
-        atuAcertos = nAcertos + 1
-        cur.execute("UPDATE tb_aposta SET {} = {} WHERE id = {}".format(colunaAcertos, atuAcertos, id))
-        con.commit()
+    @staticmethod
+    def buscar_qtde_etqta_lida(cur_db, espelho, produto):
+        try:
+            result = cur_db.execute(f"""SELECT
+             COUNT(volume), peso*COUNT(volume)
+              FROM tb_carregamento
+               INNER JOIN tb_produto on cod = produto
+                WHERE espelho = '{espelho}' and produto = {produto};""")
+            for busca in result:
+                return busca
+        except Exception as e:
+            print('Erro na Busca etiquetas lidas: ', e)
+            r = (0, 0.0)
+            return r
 
     @staticmethod
     def inserir_volume (cursor, conexao, volume, espelho, produto):
@@ -44,20 +52,18 @@ class leitura_espelho_db:
             cursor.execute(f"""INSERT INTO "main"."tb_carregamento"
             ("volume", "espelho", "produto")
             VALUES ('{volume}', '{espelho}', {produto});""")
-            #FALTA FAZER UPDATE NO ESPELHO
             conexao.commit()
+            return True
         except Exception as e:
             print("Erro ao incluir volume: ", e)
-    
-    def consultar_etqtas_lidas(cur_db, espelho, produto):
+            return False
+     
+    @staticmethod
+    def atualizar_espelho_lido(cursor, conexao, espelho, produto, volume_real, peso_real):
         try:
-            result = cur_db.execute(f"""SELECT 
-            COUNT(volume), peso*COUNT(volume)
-             FROM tb_carregamento 
-             INNER JOIN tb_produto on cod = produto
-              WHERE espelho = '{espelho}' and produto = {produto};"""
-            for busca in result:
-                return busca
+            cursor.execute(f"""UPDATE tb_espelho
+            SET volume_real = {volume_real}, peso_real = {peso_real}
+            WHERE espelho = '{espelho}' and tb_produto_cod = {produto};""")
+            conexao.commit()
         except Exception as e:
-            print("Erro ao fazer a busca pelo volumes lidos: ", e)
-            
+            print("Erro ao atualiza a 'tb_espelho': ", e)
