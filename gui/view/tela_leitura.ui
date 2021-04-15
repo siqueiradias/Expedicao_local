@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>785</width>
+    <width>838</width>
     <height>505</height>
    </rect>
   </property>
@@ -104,22 +104,32 @@ color: rgb(255, 255, 0);</string>
       </column>
       <column>
        <property name="text">
-        <string>Vol. Previsto</string>
+        <string>Vol. Prev.</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Peso Previsto</string>
+        <string>Peso Prev.</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Volume Real</string>
+        <string>Vol. Real</string>
        </property>
       </column>
       <column>
        <property name="text">
         <string>Peso Real</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Vol. Rest.</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string>Peso Rest.</string>
        </property>
       </column>
      </widget>
@@ -169,7 +179,7 @@ color: rgb(0, 170, 0);</string>
       <item>
        <widget class="QLabel" name="label">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(158, 158, 158);
+         <string notr="true">background-color: rgb(0, 0, 0);
 color: rgb(255, 255, 255);</string>
         </property>
         <property name="text">
@@ -180,7 +190,7 @@ color: rgb(255, 255, 255);</string>
      </layout>
     </item>
     <item row="2" column="0">
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="lbl_espelho">
       <property name="styleSheet">
        <string notr="true">font: 800 25pt &quot;MS Shell Dlg 2&quot;;
 background-color: rgb(158, 158, 158);
@@ -220,22 +230,5 @@ color: rgb(255, 0, 0);</string>
   </widget>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>btn_adicionar</sender>
-   <signal>clicked()</signal>
-   <receiver>txt_entrada</receiver>
-   <slot>clear()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>592</x>
-     <y>123</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>476</x>
-     <y>121</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

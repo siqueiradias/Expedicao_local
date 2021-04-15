@@ -25,5 +25,8 @@ class cadastrar_espelho_db:
         con.commit()
 
     def inserir_espelho (self, espelho):
-        self._cur.executemany("""INSERT INTO 'main'.'tb_espelho'('espelho', 'tb_produto_cod','volume_previsto','peso_previsto','volume_real','peso_real') VALUES (?,?,?,?,?,?);""", espelho)
+        print(espelho)
+        self._cur.executemany("""INSERT INTO 'main'.'tb_espelho'
+        ('espelho', 'tb_produto_cod','volume_previsto','peso_previsto','volume_real','peso_real')
+         VALUES (?,?,?,?,?,?);""", espelho)
         self._con.commit()
