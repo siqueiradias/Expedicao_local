@@ -24,7 +24,21 @@ class Window(QtWidgets.QMainWindow):
     def adicionar(self):
         try:
             etiqueta = self.txt_entrada.text()
-            produto = int(etiqueta[4:8])
+            if len(etiqueta) == 18 and etiqueta.isnumeric():
+                if etiqueta[0] == '0':
+                    print('produto: ', etiqueta[4:8])
+                    produto = int(etiqueta[4:8])
+                else:
+                    print('produto: ', etiqueta[6:9])
+                    produto = int(etiqueta[6:9])
+            elif len(etiqueta) == 20 and etiqueta.isnumeric():
+                print('produto: ', etiqueta[4:10])
+                produto = int(etiqueta[4:10])
+            else:
+                print('codigo invalido! ', etiqueta)
+                self.txt_entrada.setText('')
+                return False
+            
             volume = (etiqueta, self._espelho, produto)
             self.txt_entrada.setText('')
             
