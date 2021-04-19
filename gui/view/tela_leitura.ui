@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>838</width>
-    <height>505</height>
+    <height>503</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -75,7 +75,7 @@ color: rgb(255, 255, 0);</string>
       <item>
        <widget class="QPushButton" name="btn_adicionar">
         <property name="text">
-         <string>Adicionar</string>
+         <string>A&amp;dicionar</string>
         </property>
        </widget>
       </item>
@@ -83,6 +83,15 @@ color: rgb(255, 255, 0);</string>
     </item>
     <item row="4" column="0">
      <widget class="QTableWidget" name="tbl_resumo">
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
       <column>
        <property name="text">
         <string>Codigo</string>
@@ -206,21 +215,21 @@ color: rgb(255, 0, 0);</string>
       <item>
        <widget class="QPushButton" name="btn_estornar">
         <property name="text">
-         <string>ESTORNAR</string>
+         <string>ESTORNA&amp;R</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btn_exportar">
         <property name="text">
-         <string>EXPORTAR</string>
+         <string>E&amp;XPORTAR</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="btn_sair">
         <property name="text">
-         <string>SAIR</string>
+         <string>&amp;SAIR</string>
         </property>
        </widget>
       </item>

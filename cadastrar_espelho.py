@@ -118,6 +118,13 @@ class Cadastrar(QtWidgets.QMainWindow):
         return False
 
     def inserir_tabela(self):
+        #Organiza a lagura das colunas
+        header = self.tbl_resumo.horizontalHeader()       
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        
         rowCount = self.tbl_resumo.rowCount()
         self.tbl_resumo.insertRow(rowCount)
         # add more if there is more columns in the database.

@@ -1,6 +1,7 @@
 from PyQt5 import uic,QtWidgets
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
+from PyQt5.QtWidgets import QApplication, QMessageBox, QShortcut
+from PyQt5.QtGui import QKeySequence
+#from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
 import os
 import sys
 
@@ -16,7 +17,18 @@ class Leitura(QtWidgets.QMainWindow):
         self.lbl_espelho.setText(f"Espelho: {self._espelho}")
         self._banco = factory_db()
         
-        #self.main = App.Main_Window()
+        #TECLAS DE ATALHOS
+        self.shortcut_adicionar = QShortcut(QKeySequence("Alt+A"), self)
+        self.shortcut_adicionar.activated.connect(self.adicionar)
+
+        self.shortcut_estornar = QShortcut(QKeySequence("Alt+R"), self)
+        self.shortcut_estornar.activated.connect(self.estornar)
+
+        self.shortcut_exportar = QShortcut(QKeySequence("Alt+E"), self)
+        self.shortcut_exportar.activated.connect(self.exportar)
+
+        self.shortcut_sair = QShortcut(QKeySequence("Alt+S"), self)
+        self.shortcut_sair.activated.connect(exit)
 
         #BOTÕES
         self.txt_entrada.returnPressed.connect(self.adicionar)
@@ -29,6 +41,12 @@ class Leitura(QtWidgets.QMainWindow):
         self.inserir_tabela(leitura_espelho_db.buscar(self._banco.get_cursor(), self._espelho))
         self.atualizar_label_geral()
     
+    def estornar(self):
+        print("estornar!")
+    
+    def exportar(self):
+        print("Exportar!")
+
     def sair(self):
         self.tela = App.Main_Window()
         self.tela.show()
@@ -82,6 +100,16 @@ class Leitura(QtWidgets.QMainWindow):
         self.inserir_tabela(leitura_espelho_db.buscar(self._banco.get_cursor(), self._espelho))
 
     def inserir_tabela(self, dados):
+        header = self.tbl_resumo.horizontalHeader()       
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
+
         rowCount = self.tbl_resumo.rowCount()
         cont = len(dados)
         while cont > 0:

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
+    <width>740</width>
     <height>496</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>640</width>
+    <width>740</width>
     <height>16777215</height>
    </size>
   </property>
@@ -31,7 +31,7 @@
      <rect>
       <x>0</x>
       <y>0</y>
-      <width>641</width>
+      <width>751</width>
       <height>41</height>
      </rect>
     </property>
@@ -54,7 +54,7 @@ color: rgb(255, 255, 255);</string>
      <rect>
       <x>0</x>
       <y>50</y>
-      <width>641</width>
+      <width>741</width>
       <height>31</height>
      </rect>
     </property>
@@ -101,7 +101,7 @@ color: rgb(255, 255, 255);</string>
    <widget class="QWidget" name="verticalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>620</x>
       <y>90</y>
       <width>108</width>
       <height>80</height>
@@ -114,7 +114,7 @@ color: rgb(255, 255, 255);</string>
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Adicionar</string>
+        <string>&amp;Adicionar</string>
        </property>
       </widget>
      </item>
@@ -124,7 +124,7 @@ color: rgb(255, 255, 255);</string>
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Remover</string>
+        <string>&amp;Remover</string>
        </property>
       </widget>
      </item>
@@ -135,15 +135,24 @@ color: rgb(255, 255, 255);</string>
      <rect>
       <x>10</x>
       <y>190</y>
-      <width>621</width>
+      <width>721</width>
       <height>192</height>
      </rect>
+    </property>
+    <property name="maximumSize">
+     <size>
+      <width>721</width>
+      <height>192</height>
+     </size>
     </property>
     <property name="editTriggers">
      <set>QAbstractItemView::SelectedClicked</set>
     </property>
     <attribute name="horizontalHeaderDefaultSectionSize">
      <number>150</number>
+    </attribute>
+    <attribute name="verticalHeaderDefaultSectionSize">
+     <number>45</number>
     </attribute>
     <column>
      <property name="text">
@@ -229,7 +238,7 @@ color: rgb(255, 0, 0);</string>
      <rect>
       <x>259</x>
       <y>90</y>
-      <width>251</width>
+      <width>351</width>
       <height>80</height>
      </rect>
     </property>
@@ -237,20 +246,20 @@ color: rgb(255, 0, 0);</string>
      <item>
       <widget class="QLabel" name="lbl_descricao">
        <property name="styleSheet">
-        <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">font: 200 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Desc. do Produto&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>Desc. do Produto</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="lbl_peso">
        <property name="styleSheet">
-        <string notr="true">font: 75 14pt &quot;MS Shell Dlg 2&quot;;</string>
+        <string notr="true">font: 200 14pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;0.000 Kg&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>0.000 Kg</string>
        </property>
       </widget>
      </item>
@@ -261,7 +270,7 @@ color: rgb(255, 0, 0);</string>
      <rect>
       <x>10</x>
       <y>450</y>
-      <width>611</width>
+      <width>721</width>
       <height>41</height>
      </rect>
     </property>
@@ -272,7 +281,7 @@ color: rgb(255, 0, 0);</string>
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>SALVAR</string>
+        <string>&amp;SALVAR</string>
        </property>
       </widget>
      </item>
@@ -282,7 +291,7 @@ color: rgb(255, 0, 0);</string>
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>CANCELAR</string>
+        <string>&amp;CANCELAR</string>
        </property>
       </widget>
      </item>
@@ -293,7 +302,7 @@ color: rgb(255, 0, 0);</string>
      <rect>
       <x>10</x>
       <y>400</y>
-      <width>611</width>
+      <width>721</width>
       <height>31</height>
      </rect>
     </property>
@@ -336,6 +345,16 @@ font: 75 16pt &quot;MS Shell Dlg 2&quot;;</string>
      </item>
     </layout>
    </widget>
+   <zorder>label_2</zorder>
+   <zorder>verticalLayoutWidget</zorder>
+   <zorder>gridLayoutWidget</zorder>
+   <zorder>verticalLayoutWidget_2</zorder>
+   <zorder>tbl_resumo</zorder>
+   <zorder>lbl_espelho</zorder>
+   <zorder>verticalLayoutWidget_3</zorder>
+   <zorder>verticalLayoutWidget_4</zorder>
+   <zorder>horizontalLayoutWidget</zorder>
+   <zorder>gridLayoutWidget_2</zorder>
   </widget>
  </widget>
  <resources/>
