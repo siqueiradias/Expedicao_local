@@ -4,22 +4,40 @@ from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetIt
 import os
 import sys
 
+import App
 from factory_db import *
 from leitura_espelho_db import *
 
-class Window(QtWidgets.QMainWindow):
+class Leitura(QtWidgets.QMainWindow):
     def __init__(self):
-        super(Window, self).__init__()
+        super(Leitura, self).__init__()
         uic.loadUi("gui/view/tela_leitura.ui", self)
         self._espelho = '000001'
         self.lbl_espelho.setText(f"Espelho: {self._espelho}")
         self._banco = factory_db()
-        self.inserir_tabela(leitura_espelho_db.buscar(self._banco.get_cursor(), self._espelho))
-        self.atualizar_label_geral()
+        
+        #self.main = App.Main_Window()
 
         #BOTÕES
         self.txt_entrada.returnPressed.connect(self.adicionar)
         self.btn_adicionar.clicked.connect(self.adicionar)
+        self.btn_sair.clicked.connect(self.sair)
+
+    def abrir_espelho(self, espelho):
+        self._espelho = espelho
+        self.lbl_espelho.setText(f"Espelho: {self._espelho}")
+        self.inserir_tabela(leitura_espelho_db.buscar(self._banco.get_cursor(), self._espelho))
+        self.atualizar_label_geral()
+    
+    def sair(self):
+        self.tela = App.Main_Window()
+        self.tela.show()
+        self.hide()
+
+    def closeEvent(self, event):
+        self.tela = App.Main_Window()
+        self.tela.show()
+        event.accept()
 
     def adicionar(self):
         try:
@@ -90,8 +108,8 @@ class Window(QtWidgets.QMainWindow):
         self.lbl_vol_real_geral.setText(str(vol_prev_real) + ' CX')
         self.lbl_peso_real_geral.setText(str(peso_prev_real) + ' KG')
 
-if __name__ == "__main__":
+"""if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    janela = Window()
+    janela = Leitura()
     janela.show()
-    sys.exit(app.exec_())
+    sys.exit(app.exec_())"""

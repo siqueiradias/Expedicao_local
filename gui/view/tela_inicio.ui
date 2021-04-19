@@ -42,7 +42,10 @@
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Cadastrar</string>
+        <string>&amp;Cadastrar</string>
+       </property>
+       <property name="shortcut">
+        <string/>
        </property>
       </widget>
      </item>
@@ -52,7 +55,10 @@
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Abrir</string>
+        <string>&amp;Abrir</string>
+       </property>
+       <property name="shortcut">
+        <string/>
        </property>
       </widget>
      </item>
@@ -62,7 +68,7 @@
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Exportar</string>
+        <string>&amp;Exportar</string>
        </property>
       </widget>
      </item>
@@ -72,7 +78,10 @@
         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="text">
-        <string>Sair</string>
+        <string>&amp;Sair</string>
+       </property>
+       <property name="shortcut">
+        <string/>
        </property>
       </widget>
      </item>

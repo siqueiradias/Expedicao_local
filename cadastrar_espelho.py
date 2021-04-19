@@ -1,19 +1,20 @@
 from PyQt5 import uic,QtWidgets
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
-import sqlite3
-import datetime
+from PyQt5.QtWidgets import QApplication, QMessageBox
+#from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
+#import sqlite3
+#import datetime
 import os
 import sys
 
+import App
 from cadastrar_espelho_db import *
 
-class Window(QtWidgets.QMainWindow):
+class Cadastrar(QtWidgets.QMainWindow):
     def __init__(self):
-        super(Window, self).__init__()
+        super(Cadastrar, self).__init__()
         uic.loadUi("gui/view/tela_cadastro.ui", self)
         
-        #MENU
+        #DIGITAÇÃO DOS LINE_TEXT
         self.txt_cod.textChanged.connect(self.alterar_label)
         self.txt_volumes.textChanged.connect(self.alterar_label)
 
@@ -21,7 +22,36 @@ class Window(QtWidgets.QMainWindow):
         self.btn_adicionar.clicked.connect(self.adicionar)
         self.btn_salvar.clicked.connect(self.salvar)
         self.btn_remover.clicked.connect(self.remover_tabela)
+        self.btn_cancelar.clicked.connect(self.cancelar)
         #self.btn_cadastrar.clicked.connect()
+
+    def novo_espelho(self, espelho):
+        self.lbl_espelho.setText(str(espelho))
+    
+    def closeEvent(self, event):
+        self.tela = App.Main_Window()
+        self.tela.show()
+        event.accept()
+    
+    def cancelar(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Atenção!")
+        msg.setText(f"Deseja cancelar o cadastro do espelho {self.lbl_espelho.text()}?")
+        msg.setIcon(QMessageBox.Question)
+        msg.setStandardButtons(QMessageBox.Yes | QMessageBox.Cancel)
+        msg.setDefaultButton(QMessageBox.Cancel)
+        msg.setEscapeButton(QMessageBox.Cancel)
+        #msg.setDetailedText("Mais informações")
+
+        msg.buttonClicked.connect(self.resultado)
+ 
+        retorno = msg.exec()      
+    
+    def resultado(self, clicado):
+        if clicado.text() == "&Yes":
+            self.tela = App.Main_Window()
+            self.tela.show()
+            self.hide()
 
     def _buscar_dados(self):
         cadastrar_espelho_db().buscar(self.txt_cod.text())
@@ -115,6 +145,6 @@ class Window(QtWidgets.QMainWindow):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
-    janela = Window()
+    janela = Cadastrar()
     janela.show()
     sys.exit(app.exec_())
