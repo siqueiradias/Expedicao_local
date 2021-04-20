@@ -8,6 +8,8 @@ import sys
 import App
 from factory_db import *
 from leitura_espelho_db import *
+from audio import WavePlayerLoop
+from time import sleep
 
 class Leitura(QtWidgets.QMainWindow):
     def __init__(self):
@@ -86,15 +88,22 @@ class Leitura(QtWidgets.QMainWindow):
                 self._espelho, produto)
                 leitura_espelho_db.atualizar_espelho_lido(self._banco.get_cursor(),\
                 self._banco.get_conexao(), self._espelho, produto, volume_real, peso_real)
+                #tocar = Player("audio/sucesso.wav")
+                tocar = WavePlayerLoop("audio/sucesso.wav", False)
+                tocar.start()
             else:
                 print("Não permitido")
+                tocar = WavePlayerLoop("audio/erro.wav", True)
+                tocar.start()
+                sleep(3)
+                tocar.stop()
 
             self.atualizar_label_geral()
             self.atualizar_tabela()
         except Exception as e:
             self.txt_entrada.setText('')
             print("Erro ao adicionar a etiqueta: ", e)
-    
+
     def atualizar_tabela(self):
         self.tbl_resumo.setRowCount(0)
         self.inserir_tabela(leitura_espelho_db.buscar(self._banco.get_cursor(), self._espelho))
