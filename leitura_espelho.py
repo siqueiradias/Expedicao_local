@@ -8,7 +8,7 @@ import sys
 import App
 from factory_db import *
 from leitura_espelho_db import *
-from audio import WavePlayerLoop
+from audio2 import WavePlayerLoop
 from time import sleep
 
 class Leitura(QtWidgets.QMainWindow):

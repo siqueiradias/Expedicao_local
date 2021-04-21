@@ -2,7 +2,7 @@ from threading import Thread
 from time import sleep
 import pygame
 
-"""def tocar_audio(audio):
+def tocar_audio(audio):
     pygame.mixer.init()
     pygame.mixer.pre_init(44100, -16, 2, 2048) 
     print ("hey I finaly got this working!" )
@@ -29,14 +29,4 @@ thread2.start()
 #thread1.start()
 #thread1.join()
 thread2.join()
-print ("thread finished...exiting")"""
-
-x = 0
-y = 1
-
-teste = True
-
-if x == 0:
-    print("X é True")
-elif teste:
-    print(y)
+print ("thread finished...exiting")
