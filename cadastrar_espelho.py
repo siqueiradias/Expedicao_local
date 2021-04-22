@@ -17,6 +17,7 @@ class Cadastrar(QtWidgets.QMainWindow):
         #DIGITAÇÃO DOS LINE_TEXT
         self.txt_cod.textChanged.connect(self.alterar_label)
         self.txt_volumes.textChanged.connect(self.alterar_label)
+        self.btn_adicionar.setEnabled(False)
 
         #BOTÕES
         self.btn_adicionar.clicked.connect(self.adicionar)
@@ -62,15 +63,17 @@ class Cadastrar(QtWidgets.QMainWindow):
     def alterar_label(self):
         dados = cadastrar_espelho_db().buscar(self.txt_cod.text())
         try:
-            self.lbl_descricao.setText(dados[1])            
+            self.lbl_descricao.setText(dados[1])
+            self.btn_adicionar.setEnabled(True)            
         except Exception as e:
-            print("Erro ao alterar label descrição: ", e)
-            self.lbl_descricao.setText('')
+            #print("Erro ao alterar label descrição: ", e)
+            self.lbl_descricao.setText('Não encontrado')
+            self.btn_adicionar.setEnabled(False)
 
         try:
             self.lbl_peso.setText(f"{float(dados[2]*int(self.txt_volumes.text())):.3f} KG")
         except Exception as e:
-            print("Erro ao alterar label peso: ", e)
+            #print("Erro ao alterar label peso: ", e)
             self.lbl_peso.setText("0.000 KG")
     
     def pegar_valor(self):
@@ -91,14 +94,32 @@ class Cadastrar(QtWidgets.QMainWindow):
         return lista_espelho
 
     def salvar(self):
-        dados = self.pegar_valor()
-        for item in dados:
-            print(item)
-        try:
-            salvar_dados = cadastrar_espelho_db()
-            salvar_dados.inserir_espelho(dados)
-        except Exception as e:
-            print('Erro ao SALVAR os dados dos espelho: ', e)
+        msgBox = QMessageBox()
+        msgBox.setWindowTitle("Salvar Espelho")
+        msgBox.setText(f"Deseja salvar o {self.lbl_espelho.text()}?")
+        msgBox.setStandardButtons(QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        msgBox.setDefaultButton(QMessageBox.Yes)
+        msgBox.setEscapeButton(QMessageBox.Cancel)
+        returnValue = msgBox.exec()
+
+        if returnValue == QMessageBox.Yes:
+            dados = self.pegar_valor()
+            for item in dados:
+                print(item)
+            try:
+                salvar_dados = cadastrar_espelho_db()
+                salvar_dados.inserir_espelho(dados)
+                self.tela = App.Main_Window()
+                self.tela.show()
+                self.hide()
+            except Exception as e:
+                print('Erro ao SALVAR os dados dos espelho: ', e)
+        elif returnValue == QMessageBox.No:
+            self.tela = App.Main_Window()
+            self.tela.show()
+            self.hide()
+        elif returnValue == QMessageBox.Cancel:
+            pass
 
     def adicionar(self):
         if self.verificar_tabela():

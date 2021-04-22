@@ -16,7 +16,7 @@ class Main_Window(QtWidgets.QMainWindow):
     def __init__(self):
         super(Main_Window, self).__init__()
         self._lista_etiquetas = list()
-        self._DB = 'dao/base/BD_EXPEDICAO.db'
+        #self._DB = 'dao/base/BD_EXPEDICAO.db'
         #self._banco = factory_db(self.get_banco_dados())
         uic.loadUi("gui/view/tela_inicio.ui", self)
 
@@ -42,21 +42,41 @@ class Main_Window(QtWidgets.QMainWindow):
         self.btn_abrir.clicked.connect(self.abrir)
         self.btn_exportar.clicked.connect(self.exportar)
 
+        #LINE EDIT - Ativação dos botões
+        self.txt_espelho.textChanged.connect(self.ativar_botoes)
+        self.btn_cadastrar.setEnabled(False)
+        self.btn_abrir.setEnabled(False)
+        self.btn_exportar.setEnabled(False)
+        
         #ENTER
         #self.btn_sair.released.connect(exit)
         #self.btn_cadastrar.toggle.connect(self.cadastrar_espelho)
         #self.btn_abrir.released.connect(self.abrir)
         #self.btn_exportar.pressed.connect(self.exportar)
-    
+
+    def ativar_botoes(self):
+        """Verificar se foi digitado o espelho
+        se SIM, ativar ativa os botões
+        """
+        if self.txt_espelho.text() == "":
+            self.btn_cadastrar.setEnabled(False)
+            self.btn_abrir.setEnabled(False)
+            self.btn_exportar.setEnabled(False)
+        else:
+            self.btn_cadastrar.setEnabled(True)
+            self.btn_abrir.setEnabled(True)
+            self.btn_exportar.setEnabled(True)
+
     def cadastrar_espelho(self):
         self.cadastrar.novo_espelho(str(self.txt_espelho.text()))
         self.cadastrar.show()
         self.hide()
         
     def abrir(self):
-        self.leitura.abrir_espelho(str(self.txt_espelho.text()))
-        self.leitura.showMaximized()
-        self.hide()
+        if self.btn_abrir.isEnabled():
+            self.leitura.abrir_espelho(str(self.txt_espelho.text()))
+            self.leitura.showMaximized()
+            self.hide()
     
     def exportar(self):
         print("Botão exportado!")
