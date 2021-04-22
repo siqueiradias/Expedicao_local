@@ -9,6 +9,7 @@ import App
 from factory_db import *
 from leitura_espelho_db import *
 from audio2 import WavePlayerLoop
+from Alerta import CustomDialog
 from time import sleep
 
 class Leitura(QtWidgets.QMainWindow):
@@ -73,30 +74,46 @@ class Leitura(QtWidgets.QMainWindow):
                 print('produto: ', etiqueta[4:10])
                 produto = int(etiqueta[4:10])
             else:
-                print('codigo invalido! ', etiqueta)
+                self.lbl_aviso.setText(f"Volume {etiqueta} é invalido!")
+                msg_erro = CustomDialog("Atenção", f"Volume {etiqueta} é invalido!")
+                msg_erro.ui_dialog()
+                self.txt_entrada.setText('')
+                return False
+            if not(leitura_espelho_db.buscar_produto(self._banco.get_cursor(), self._espelho, produto)):
+                self.lbl_aviso.setText(f"Volume {etiqueta} não pertence a nenhum produto do espelho!")
+                msg_erro = CustomDialog("Atenção", f"""Volume {etiqueta} não pertence
+                a nenhum produto do espelho {self._espelho}!""")
+                msg_erro.ui_dialog()
                 self.txt_entrada.setText('')
                 return False
             
             volume = (etiqueta, self._espelho, produto)
             self.txt_entrada.setText('')
             
-            if leitura_espelho_db.inserir_volume(self._banco.get_cursor(),\
+            inclusao = leitura_espelho_db.inserir_volume(self._banco.get_cursor(),\
                 self._banco.get_conexao(),\
                     etiqueta, self._espelho,\
-                        produto):
+                        produto)
+
+            if inclusao == 1:
                 volume_real, peso_real = leitura_espelho_db.buscar_qtde_etqta_lida(self._banco.get_cursor(),\
                 self._espelho, produto)
                 leitura_espelho_db.atualizar_espelho_lido(self._banco.get_cursor(),\
                 self._banco.get_conexao(), self._espelho, produto, volume_real, peso_real)
-                #tocar = Player("audio/sucesso.wav")
-                tocar = WavePlayerLoop("audio/sucesso.wav", False)
-                tocar.start()
+                tocar = WavePlayerLoop("audio/sucesso.wav")
+                tocar.play()
+                self.lbl_aviso.setText(f'Volume {etiqueta} incluído')
+            elif inclusao == 2:
+                print("Produto já consta no espelho")
+                tocar = WavePlayerLoop("audio/existe.wav") 
+                tocar.play()
+                self.lbl_aviso.setText(f"Volume {etiqueta} já incluido!")
+
             else:
                 print("Não permitido")
-                tocar = WavePlayerLoop("audio/erro.wav", True)
-                tocar.start()
-                sleep(3)
-                tocar.stop()
+                self.lbl_aviso.setText(f"Volume {etiqueta} é invalido!")
+                msg_erro = CustomDialog("Atenção", f"Volume {etiqueta} é invalido!")
+                msg_erro.ui_dialog()
 
             self.atualizar_label_geral()
             self.atualizar_tabela()

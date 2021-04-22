@@ -1,3 +1,4 @@
+import sqlite3
 
 class leitura_espelho_db:
     @staticmethod    
@@ -16,6 +17,24 @@ class leitura_espelho_db:
             print('Erro na Busca de Dados: ', e)
             r = ('000',"Produto Não Encontrado!", 0, 0, 0, 0, 0, 0)
             return r
+
+    @staticmethod    
+    def buscar_produto(cur_db, espelho, produto):
+        """Verifica se o produto está relacionado ao espelho
+        """
+        try:
+            result = cur_db.execute(f"""SELECT
+             tb_produto_cod FROM tb_espelho
+                WHERE espelho = '{espelho}' and tb_produto_cod = {int(produto)};""")
+            for busca in result:
+                print("Busca: ", busca)
+                if busca[0] == produto:
+                    return  True
+                return False
+
+        except Exception as e:
+            print('Erro na Busca de Dados: ', e)
+            return False
 
     @staticmethod
     def buscar_valor_geral(cur_db, espelho):
@@ -53,10 +72,14 @@ class leitura_espelho_db:
             ("volume", "espelho", "produto")
             VALUES ('{volume}', '{espelho}', {produto});""")
             conexao.commit()
-            return True
+            return 1
+        except sqlite3.IntegrityError as e:
+            print("Erro no SQL: ", e)
+            return 2
+
         except Exception as e:
             print("Erro ao incluir volume: ", e)
-            return False
+            return 3
      
     @staticmethod
     def atualizar_espelho_lido(cursor, conexao, espelho, produto, volume_real, peso_real):
