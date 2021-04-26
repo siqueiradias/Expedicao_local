@@ -1,6 +1,6 @@
 from PyQt5 import uic,QtWidgets
 from PyQt5.QtWidgets import QApplication, QMessageBox, QShortcut
-from PyQt5.QtGui import QKeySequence
+from PyQt5.QtGui import QKeySequence, QColor
 #from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
 import os
 import sys
@@ -19,6 +19,7 @@ class Leitura(QtWidgets.QMainWindow):
         self._espelho = '000001'
         self.lbl_espelho.setText(f"Espelho: {self._espelho}")
         self._banco = factory_db()
+        self.txt_entrada.setFocus()
         
         #TECLAS DE ATALHOS
         self.shortcut_adicionar = QShortcut(QKeySequence("Alt+A"), self)
@@ -61,6 +62,7 @@ class Leitura(QtWidgets.QMainWindow):
         event.accept()
 
     def adicionar(self):
+        self.txt_entrada.setFocus()
         try:
             etiqueta = self.txt_entrada.text()
             if len(etiqueta) == 18 and etiqueta.isnumeric():
@@ -87,13 +89,17 @@ class Leitura(QtWidgets.QMainWindow):
                 self.txt_entrada.setText('')
                 return False
             
-            volume = (etiqueta, self._espelho, produto)
             self.txt_entrada.setText('')
             
-            inclusao = leitura_espelho_db.inserir_volume(self._banco.get_cursor(),\
-                self._banco.get_conexao(),\
-                    etiqueta, self._espelho,\
-                        produto)
+            if self.verificar_item_restante(produto):
+                inclusao = self.verificar_volume(etiqueta)
+                if inclusao == 1:              
+                    inclusao = leitura_espelho_db.inserir_volume(self._banco.get_cursor(),\
+                        self._banco.get_conexao(),\
+                            etiqueta, self._espelho,\
+                                produto)
+            else:
+                inclusao = 3
 
             if inclusao == 1:
                 volume_real, peso_real = leitura_espelho_db.buscar_qtde_etqta_lida(self._banco.get_cursor(),\
@@ -104,11 +110,17 @@ class Leitura(QtWidgets.QMainWindow):
                 tocar.play()
                 self.lbl_aviso.setText(f'Volume {etiqueta} incluído')
             elif inclusao == 2:
-                print("Produto já consta no espelho")
                 tocar = WavePlayerLoop("audio/existe.wav") 
                 tocar.play()
                 self.lbl_aviso.setText(f"Volume {etiqueta} já incluido!")
-
+            elif inclusao == 3:
+                self.lbl_aviso.setText(f"Produto {produto} já atingiu o peso!")
+                msg_erro = CustomDialog("Atenção", f"""Produto {produto} já atingiu o peso!""")
+                msg_erro.ui_dialog()    
+            elif inclusao == 4:
+                self.lbl_aviso.setText(f"Volume {etiqueta} pertence a outro espelho!")
+                msg_erro = CustomDialog("Atenção", f"""Volume {etiqueta} pertence a outro espelho!""")
+                msg_erro.ui_dialog()  
             else:
                 print("Não permitido")
                 self.lbl_aviso.setText(f"Volume {etiqueta} é invalido!")
@@ -117,9 +129,40 @@ class Leitura(QtWidgets.QMainWindow):
 
             self.atualizar_label_geral()
             self.atualizar_tabela()
+            self.txt_entrada.setFocus()
         except Exception as e:
             self.txt_entrada.setText('')
+            self.txt_entrada.setFocus()
             print("Erro ao adicionar a etiqueta: ", e)
+
+    def verificar_item_restante(self, produto):
+        """Verifica se volume que será incluso no espelho aberto
+        já teve o número de volume atingido, se caso, NÃO retornar True
+        se SIM, retornar False
+
+        Args:
+            produto (str): codigo do produto referente ao volume que pretende ser incluso no espelho
+
+        Returns:
+            boolean: True ou False
+        """        
+        volume_restante, peso_restante = leitura_espelho_db.buscar_espelho_produto_restante(self._banco.get_cursor(), self._espelho, int(produto))
+        if volume_restante < 0:
+            return True
+        else:
+            return False
+
+    def verificar_volume(self, etiqueta):
+        espelho = leitura_espelho_db.buscar_etiqueta(self._banco.get_cursor(), etiqueta)[0]
+        if espelho == self._espelho:
+            #print("Etiqueta já pertence ao espelho!")
+            return 2
+        elif espelho == None:
+            #print("Etiqueta ainda não registrada")
+            return 1
+        else:
+            #print("Etiqueta pertence a outro espelho!")
+            return 4
 
     def atualizar_tabela(self):
         self.tbl_resumo.setRowCount(0)
@@ -141,15 +184,24 @@ class Leitura(QtWidgets.QMainWindow):
         while cont > 0:
             cont -= 1
             self.tbl_resumo.insertRow(rowCount)
-            self.tbl_resumo.setItem(rowCount, 0, QtWidgets.QTableWidgetItem(str(dados[cont][0])))
-            self.tbl_resumo.setItem(rowCount, 1, QtWidgets.QTableWidgetItem(str(dados[cont][1])))
-            self.tbl_resumo.setItem(rowCount, 2, QtWidgets.QTableWidgetItem(str(dados[cont][2])))
-            self.tbl_resumo.setItem(rowCount, 3, QtWidgets.QTableWidgetItem(str(dados[cont][3])))
-            self.tbl_resumo.setItem(rowCount, 4, QtWidgets.QTableWidgetItem(str(dados[cont][4])))
-            self.tbl_resumo.setItem(rowCount, 5, QtWidgets.QTableWidgetItem(str(dados[cont][5])))
-            self.tbl_resumo.setItem(rowCount, 6, QtWidgets.QTableWidgetItem(str(dados[cont][6])))
-            self.tbl_resumo.setItem(rowCount, 7, QtWidgets.QTableWidgetItem(str(dados[cont][7])))
-          
+            for coluna in range(8):    
+                self.tbl_resumo.setItem(rowCount, coluna, QtWidgets.QTableWidgetItem(str(dados[cont][coluna])))
+            #self.tbl_resumo.setItem(rowCount, 0, QtWidgets.QTableWidgetItem(str(dados[cont][0])))
+            #self.tbl_resumo.setItem(rowCount, 1, QtWidgets.QTableWidgetItem(str(dados[cont][1])))
+            #self.tbl_resumo.setItem(rowCount, 2, QtWidgets.QTableWidgetItem(str(dados[cont][2])))
+            #self.tbl_resumo.setItem(rowCount, 3, QtWidgets.QTableWidgetItem(str(dados[cont][3])))
+            #self.tbl_resumo.setItem(rowCount, 4, QtWidgets.QTableWidgetItem(str(dados[cont][4])))
+            #self.tbl_resumo.setItem(rowCount, 5, QtWidgets.QTableWidgetItem(str(dados[cont][5])))
+            #self.tbl_resumo.setItem(rowCount, 6, QtWidgets.QTableWidgetItem(str(dados[cont][6])))
+            #self.tbl_resumo.setItem(rowCount, 7, QtWidgets.QTableWidgetItem(str(dados[cont][7])))
+            #for coluna in range(8):    
+                if dados[cont][4] == 0:
+                    self.tbl_resumo.item(rowCount, coluna).setBackground(QColor(255,0,0)) #Vermelho
+                elif dados[cont][6] == 0:
+                    self.tbl_resumo.item(rowCount, coluna).setBackground(QColor(0, 170, 0)) #Verde
+                else:
+                    self.tbl_resumo.item(rowCount, coluna).setBackground(QColor(255, 255, 0)) #Amarelo
+
     def atualizar_label_geral(self):
         dados = leitura_espelho_db.buscar_valor_geral(self._banco.get_cursor(), self._espelho)
         vol_prev_geral = dados[0]

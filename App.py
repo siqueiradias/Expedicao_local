@@ -19,6 +19,7 @@ class Main_Window(QtWidgets.QMainWindow):
         #self._DB = 'dao/base/BD_EXPEDICAO.db'
         #self._banco = factory_db(self.get_banco_dados())
         uic.loadUi("gui/view/tela_inicio.ui", self)
+        self.txt_espelho.setFocus()
 
         self.leitura = leitura_espelho.Leitura()
         self.cadastrar = cadastrar_espelho.Cadastrar()

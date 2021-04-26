@@ -19,6 +19,58 @@ class leitura_espelho_db:
             return r
 
     @staticmethod    
+    def buscar_espelho_produto_restante(cur_db, espelho, produto):
+        """Faz busca no banco filtrando por:
+        - Espelho 
+        - Produto
+
+        Args:
+            cur_db (cursor): cursor do banco
+            espelho (str): espelho de carregamento
+            produto (int): codigo do produto
+
+        Returns:
+            [tupla]: [volume_restante, peso_restante]
+        """                 
+        try:
+            result = cur_db.execute(f"""SELECT
+              (volume_real - volume_previsto), (peso_real - peso_previsto)
+               FROM tb_espelho INNER JOIN tb_produto on tb_produto.cod = tb_espelho.tb_produto_cod
+                WHERE espelho = '{espelho}' AND tb_espelho.tb_produto_cod = {produto};""")
+            for busca in result:
+                return busca
+        except Exception as e:
+            print('Erro na Busca de Dados: ', e)
+            r = (0, 0)
+            return r
+
+
+    @staticmethod    
+    def buscar_etiqueta(cur_db, etiqueta):
+        """Faz busca no banco filtrando por:
+        - Etiqueta
+
+        Args:
+            cur_db (cursor): cursor do banco
+            espelho (str): etiqueta
+
+        Returns:
+            [str]: [espelho relaciona a etiqueta]
+        """                 
+        try:
+            result = cur_db.execute(f"""SELECT
+             espelho FROM tb_carregamento
+              WHERE volume = '{etiqueta}';""")
+            for busca in result:
+                print("xcfvcdv", busca)
+                return busca
+        except Exception as e:
+            print('Erro na buscar_etiqueta: ', e)
+            r = None
+            return r
+
+
+    @staticmethod    
     def buscar_produto(cur_db, espelho, produto):
         """Verifica se o produto está relacionado ao espelho
         """
