@@ -1,5 +1,5 @@
 from PyQt5 import uic,QtWidgets
-from PyQt5.QtWidgets import QApplication, QMessageBox, QShortcut
+from PyQt5.QtWidgets import QApplication, QMessageBox, QShortcut, QFileDialog
 from PyQt5.QtGui import QKeySequence
 #from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
 #from PyKDE4.kdeui import KDateComboBox
@@ -10,6 +10,8 @@ import sys
 
 import leitura_espelho
 import cadastrar_espelho
+from exportar import Exportar
+from factory_db import factory_db
 
 
 class Main_Window(QtWidgets.QMainWindow):
@@ -17,7 +19,7 @@ class Main_Window(QtWidgets.QMainWindow):
         super(Main_Window, self).__init__()
         self._lista_etiquetas = list()
         #self._DB = 'dao/base/BD_EXPEDICAO.db'
-        #self._banco = factory_db(self.get_banco_dados())
+        self._banco = factory_db()
         uic.loadUi("gui/view/tela_inicio.ui", self)
         self.txt_espelho.setFocus()
 
@@ -81,6 +83,36 @@ class Main_Window(QtWidgets.QMainWindow):
     
     def exportar(self):
         print("Botão exportado!")
+        formatos = {
+            'csv': "Arq. separado por vírgula (*.csv)",
+            'xlsx': "Arquivo excel (*.xlsx)",
+            'txt': "Arquivo de texto (*.txt)"
+        }
+        try:
+            arquivo = QFileDialog.getSaveFileName(self, "Onde salvar?", "",\
+                (f"{formatos['csv']};;{formatos['xlsx']};;{formatos['txt']}"))
+
+            if arquivo[1] == formatos['csv']:
+                Exportar.exp_to_csv(self._banco.get_conexao(), self.txt_espelho.text(), arquivo[0])
+            elif arquivo[1] == formatos['xlsx']:
+                Exportar.exp_to_excel(self._banco.get_conexao(), self.txt_espelho.text(), arquivo[0])
+            elif arquivo[1] == formatos['txt']:
+                Exportar.exp_to_txt(self._banco.get_conexao(), self.txt_espelho.text(), arquivo[0])
+            
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setWindowTitle("Notificação")
+            msg_box.setText("Arquivo salvo com sucesso!")
+            
+            return_value = msg_box.exec()
+            
+        except Exception as e:
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.setWindowTitle("ERRO")
+            msg_box.setText("Erro ao salvar arquivo!")
+            msg_box.setDetailedText(e)
+            return_value = msg_box.exec()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

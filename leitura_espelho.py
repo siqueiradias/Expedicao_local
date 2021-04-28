@@ -67,13 +67,13 @@ class Leitura(QtWidgets.QMainWindow):
             etiqueta = self.txt_entrada.text()
             if len(etiqueta) == 18 and etiqueta.isnumeric():
                 if etiqueta[0] == '0':
-                    print('produto: ', etiqueta[4:8])
+                    #print('produto: ', etiqueta[4:8])
                     produto = int(etiqueta[4:8])
                 else:
-                    print('produto: ', etiqueta[6:9])
+                    #print('produto: ', etiqueta[6:9])
                     produto = int(etiqueta[6:9])
             elif len(etiqueta) == 20 and etiqueta.isnumeric():
-                print('produto: ', etiqueta[4:10])
+                #print('produto: ', etiqueta[4:10])
                 produto = int(etiqueta[4:10])
             else:
                 self.lbl_aviso.setText(f"Volume {etiqueta} é invalido!")

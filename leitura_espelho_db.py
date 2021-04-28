@@ -62,7 +62,6 @@ class leitura_espelho_db:
              espelho FROM tb_carregamento
               WHERE volume = '{etiqueta}';""")
             for busca in result:
-                print("xcfvcdv", busca)
                 return busca
         except Exception as e:
             print('Erro na buscar_etiqueta: ', e)
@@ -79,7 +78,6 @@ class leitura_espelho_db:
              tb_produto_cod FROM tb_espelho
                 WHERE espelho = '{espelho}' and tb_produto_cod = {int(produto)};""")
             for busca in result:
-                print("Busca: ", busca)
                 if busca[0] == produto:
                     return  True
                 return False
