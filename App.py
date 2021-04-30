@@ -12,6 +12,7 @@ import leitura_espelho
 import cadastrar_espelho
 from exportar import Exportar
 from factory_db import factory_db
+from cadastrar_espelho_db import cadastrar_espelho_db
 
 
 class Main_Window(QtWidgets.QMainWindow):
@@ -71,9 +72,16 @@ class Main_Window(QtWidgets.QMainWindow):
             self.btn_exportar.setEnabled(True)
 
     def cadastrar_espelho(self):
-        self.cadastrar.novo_espelho(str(self.txt_espelho.text()))
-        self.cadastrar.show()
-        self.hide()
+        cad_espelho = cadastrar_espelho_db()
+        if cad_espelho.verificar_espelho(self.txt_espelho.text()):
+            QMessageBox.about(self, "Alerta","Espelho já cadastrado!")
+            self.cadastrar.atualizar_espelho(str(self.txt_espelho.text()))
+            self.cadastrar.show()
+            self.hide()
+        else:
+            self.cadastrar.novo_espelho(str(self.txt_espelho.text()))
+            self.cadastrar.show()
+            self.hide()
         
     def abrir(self):
         if self.btn_abrir.isEnabled():
