@@ -1,9 +1,6 @@
 from PyQt5 import uic,QtWidgets
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from PyQt5.QtGui import QIntValidator
-#from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
-#import sqlite3
-#import datetime
 import os
 import sys
 
@@ -14,6 +11,7 @@ class Cadastrar(QtWidgets.QMainWindow):
     def __init__(self):
         super(Cadastrar, self).__init__()
         uic.loadUi("gui/view/tela_cadastro.ui", self)
+        self._update = False
         
         #DIGITAÇÃO DOS LINE_TEXT
         self.txt_cod.textChanged.connect(self.alterar_label)
@@ -36,6 +34,7 @@ class Cadastrar(QtWidgets.QMainWindow):
         self.lbl_espelho.setText(str(espelho))
 
     def atualizar_espelho(self, espelho):
+        self._update = True
         self.lbl_espelho.setText(str(espelho))
         cad_espelho = cadastrar_espelho_db()
         self.inserir_tabela(cad_espelho.buscar_espelho(espelho))
@@ -99,6 +98,12 @@ class Cadastrar(QtWidgets.QMainWindow):
             self.btn_adicionar.setEnabled(False)
 
     def pegar_valor(self):
+        """Pega os dados adicionados na tablea_resumo (GUI)
+        e retorna em uma lista
+
+        Returns:
+            list: lista de tuplas(espelho, cod_produto, volume_prev., peso_previsto)
+        """        
         volume_geral = 0
         peso_geral = float(0.0)
         cont = 0
@@ -106,6 +111,7 @@ class Cadastrar(QtWidgets.QMainWindow):
         while cont < self.tbl_resumo.rowCount():
             volume_geral += int(self.tbl_resumo.item(cont, 2).text())
             peso_geral += float(self.tbl_resumo.item(cont, 3).text())
+            #lista_espelho(espelho, cod_produto, volume_prev., peso_previsto)
             lista_espelho.append((self.lbl_espelho.text(),\
                 int(self.tbl_resumo.item(cont, 0).text()),\
                      int(self.tbl_resumo.item(cont, 2).text()),\
@@ -130,7 +136,24 @@ class Cadastrar(QtWidgets.QMainWindow):
                 print(item)
             try:
                 salvar_dados = cadastrar_espelho_db()
-                salvar_dados.inserir_espelho(dados)
+                if self._update:
+                    #Tratamento dos dados do espelho_old
+                    espelho_old = list()
+                    espelho_new = list()
+                    for item in salvar_dados.buscar_espelho(self.lbl_espelho.text()):
+                        espelho_old.append((self.lbl_espelho.text(), item[0], int(item[2]), float(item[3])))
+                    for item in dados:
+                        espelho_new.append(item[0:4])
+                    for item in espelho_old:
+                        if not item in espelho_new:
+                            salvar_dados.remover_produto(item[0], item[1])
+                            print("item removido: ", item)
+                    print("iniciando atualização")
+                    for item in dados:
+                        salvar_dados.atualizar_espelho(item)
+                else:
+                    print("inserindo dados sem UpDate")
+                    salvar_dados.inserir_espelho(dados)
                 self.tela = App.Main_Window()
                 self.tela.show()
                 self.hide()
@@ -210,13 +233,12 @@ class Cadastrar(QtWidgets.QMainWindow):
                 rowCount = self.tbl_resumo.rowCount()
                 self.tbl_resumo.insertRow(rowCount)
                 for coluna, item in enumerate(itens):
-                # add more if there is more columns in the database.
+                    #Ingora o primeito item pois faz referencia ao espelho
+                    #if coluna == 0:
+                    #    continue
+
+                    # add more if there is more columns in the database.
                     self.tbl_resumo.setItem(rowCount, coluna, QtWidgets.QTableWidgetItem(str(item)))
-                #self.pegar_valor()
-                #self.tbl_resumo.setItem(rowCount, 1, QtWidgets.QTableWidgetItem(self.lbl_descricao.text()))
-                #self.tbl_resumo.setItem(rowCount, 2, QtWidgets.QTableWidgetItem(str(int(self.txt_volumes.text()))))
-                #self.tbl_resumo.setItem(rowCount, 3, QtWidgets.QTableWidgetItem(self.lbl_peso.text().replace(' KG','')))
-                
     
     def atualizar_label_geral(self):
         dados = self.pegar_valor()

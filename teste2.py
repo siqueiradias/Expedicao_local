@@ -1,15 +1,18 @@
-import pandas as pd
-import sqlite3
+a = [(1, 2), (2, 3), (3, 4)]
+b = [(2, 5, 0), (7, 9, 1), (1, 2, 3)]
+c = [(2, 5), (7, 9), (1, 2)]
 
-# Read sqlite query results into a pandas DataFrame
-con = sqlite3.connect("base/BD_EXPEDICAO.db")
-df = pd.read_sql_query("SELECT * FROM tb_carregamento WHERE espelho = 2;", con)
+for i in b:
+    print(i[0:2])
 
-# Verify that result of SQL query is stored in the dataframe
-print(df.head())
+print('*'*10)
 
-#df.to_excel("saida.xlsx", index=False)
+d = []
+for item in b:
+    d.append(item[0:2])
 
-df.to_csv("saida.txt", sep=";")
+print(d)
 
-con.close()
+for num in a:
+    if not num in d:
+        print(num)
