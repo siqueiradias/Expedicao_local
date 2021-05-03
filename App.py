@@ -90,7 +90,6 @@ class Main_Window(QtWidgets.QMainWindow):
             self.hide()
     
     def exportar(self):
-        print("Botão exportado!")
         formatos = {
             'csv': "Arq. separado por vírgula (*.csv)",
             'xlsx': "Arquivo excel (*.xlsx)",
@@ -119,7 +118,7 @@ class Main_Window(QtWidgets.QMainWindow):
             msg_box.setIcon(QMessageBox.Critical)
             msg_box.setWindowTitle("ERRO")
             msg_box.setText("Erro ao salvar arquivo!")
-            msg_box.setDetailedText(e)
+            msg_box.setDetailedText(str(e))
             return_value = msg_box.exec()
 
 if __name__ == "__main__":
@@ -127,9 +126,3 @@ if __name__ == "__main__":
     w = Main_Window()
     w.show()
     sys.exit(app.exec_())
-
-"""if __name__ == "__main__":
-    app = QtWidgets.QApplication([])
-    janela = Main_Window()
-    janela.show()
-    sys.exit(app.exec_())"""

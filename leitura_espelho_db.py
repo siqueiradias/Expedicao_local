@@ -116,6 +116,24 @@ class leitura_espelho_db:
             return r
 
     @staticmethod
+    def buscar_estorno(cur_db, espelho):
+        try:
+            lista_volumes = list()
+            result = cur_db.execute(f"""SELECT
+             volume, descricao
+              FROM tb_carregamento
+               INNER JOIN tb_produto on cod = produto
+                WHERE espelho = '{espelho}';""")
+            for busca in result:
+                lista_volumes.append((busca))
+            return lista_volumes
+        except Exception as e:
+            print('Erro na Busca etiquetas lidas: ', e)
+            r = (0, "Não encontrado")
+            return r
+
+
+    @staticmethod
     def inserir_volume (cursor, conexao, volume, espelho, produto):
         try:
             cursor.execute(f"""INSERT INTO "main"."tb_carregamento"
