@@ -13,10 +13,10 @@ from Alerta import CustomDialog
 from time import sleep
 
 class Estorno(QtWidgets.QMainWindow):
-    def __init__(self):
+    def __init__(self, espelho):
         super(Estorno, self).__init__()
         uic.loadUi("gui/view/tela_estorno.ui", self)
-        self._espelho = '000001'
+        self._espelho = espelho
         #self.lbl_espelho.setText(f"Espelho: {self._espelho}")
         self._banco = factory_db()
         self.txt_estorno.setFocus()
@@ -27,18 +27,23 @@ class Estorno(QtWidgets.QMainWindow):
         self.inserir_tabela(self._dados)
 
         self.txt_estorno.returnPressed.connect(self.estorno)
-        self.btn_estornar.clicked.connect(self.lista_estorno)
+        self.btn_estornar.clicked.connect(self.estorno)
 
-    """
+        self.shortcut_adicionar = QShortcut(QKeySequence("ESC"), self)
+        self.shortcut_adicionar.activated.connect(self.sair)
+
+    
     def sair(self):
-        self.tela = Leitura()
-        self.tela.show()
+        self.tela = leitura_espelho.Leitura()
+        self.tela.abrir_espelho(self._espelho)
+        self.tela.showMaximized()
         self.hide()
-
+    
     def closeEvent(self, event):
-        self.tela = App.Main_Window()
-        self.tela.show()
-        event.accept()"""
+        self.tela = leitura_espelho.Leitura()
+        self.tela.abrir_espelho(self._espelho)
+        self.tela.showMaximized()
+        event.accept()
 
     def inserir_tabela(self, dados):
         header = self.tbl_estorno.horizontalHeader()       
@@ -52,16 +57,10 @@ class Estorno(QtWidgets.QMainWindow):
             self.tbl_estorno.insertRow(rowCount)
             for coluna in range(2):    
                 self.tbl_estorno.setItem(rowCount, coluna, QtWidgets.QTableWidgetItem(str(dados[cont][coluna])))
-                """
-                if dados[cont][4] == 0:
-                    self.tbl_resumo.item(rowCount, coluna).setBackground(QColor(255,0,0)) #Vermelho
-                elif dados[cont][6] == 0:
-                    self.tbl_resumo.item(rowCount, coluna).setBackground(QColor(0, 170, 0)) #Verde
-                else:
-                    self.tbl_resumo.item(rowCount, coluna).setBackground(QColor(255, 255, 0)) #Amarelo
-                """
 
     def estorno(self):
+        """Realiza o estorno de volume do espelho
+        """        
         achou = 0
         for volume in self._dados:
             if self.txt_estorno.text() == volume[0]:
@@ -72,10 +71,24 @@ class Estorno(QtWidgets.QMainWindow):
                     self.colorir_tabela(self.txt_estorno.text())
                     achou = 1
         if achou == 1:
-            self.lbl_msg.setText("Volume estornado...")
-            self.txt_estorno.setText('')
-            audio = WavePlayerLoop("audio/sucesso.wav")
-            audio.play()
+            try:
+                leitura_espelho_db.remove_vol_espelho(\
+                    self._banco.get_cursor(), self._banco.get_conexao(),\
+                         self._espelho, self.txt_estorno.text())
+                
+                self.lbl_msg.setText("Volume estornado...")
+                self.txt_estorno.setText('')
+                audio = WavePlayerLoop("audio/sucesso.wav")
+                audio.play()
+            except Exception as e:
+                msg_box = QMessageBox()
+                msg_box.setWindowTitle("Erro")
+                msg_box.setIcon(QMessageBox.Warning)
+                msg_box.setText(f"Erro ao estornar volume!!!")
+                msg_box.setDetailedText(str(e))
+                msg_box.setEscapeButton('ESC')
+                return_value = msg_box.exec()
+
         elif achou == 2:
             self.lbl_msg.setText("Volume já estornado...")
             self.txt_estorno.setText('')

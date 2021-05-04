@@ -44,7 +44,6 @@ class leitura_espelho_db:
             r = (0, 0)
             return r
 
-
     @staticmethod    
     def buscar_etiqueta(cur_db, etiqueta):
         """Faz busca no banco filtrando por:
@@ -55,7 +54,7 @@ class leitura_espelho_db:
             espelho (str): etiqueta
 
         Returns:
-            [str]: [espelho relaciona a etiqueta]
+            [str]: [espelho relacionado a etiqueta]
         """                 
         try:
             result = cur_db.execute(f"""SELECT
@@ -67,7 +66,6 @@ class leitura_espelho_db:
             print('Erro na buscar_etiqueta: ', e)
             r = None
             return r
-
 
     @staticmethod    
     def buscar_produto(cur_db, espelho, produto):
@@ -132,7 +130,6 @@ class leitura_espelho_db:
             r = (0, "Não encontrado")
             return r
 
-
     @staticmethod
     def inserir_volume (cursor, conexao, volume, espelho, produto):
         try:
@@ -158,3 +155,21 @@ class leitura_espelho_db:
             conexao.commit()
         except Exception as e:
             print("Erro ao atualiza a 'tb_espelho': ", e)
+     
+    @staticmethod
+    def remove_vol_espelho(cursor, conexao, espelho, volume):
+        """Remove o volume(etiqueta) do espelho de carregamento
+
+        Args:
+            cursor (cur): cursor de acesso ao banco
+            conexao (con): conexao ao banco de dabos
+            espelho (str): espelho de carregamento
+            volume (str): codigo de barras do volume
+        """        
+        try:
+            cursor.execute(f"""DELETE FROM tb_carregamento 
+            WHERE volume = '{volume}' AND espelho = '{espelho}';""")
+            conexao.commit()
+        except Exception as e:
+            print(f"Erro ao estornar o '{volume}': ", e)
+

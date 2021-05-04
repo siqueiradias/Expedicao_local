@@ -6,6 +6,7 @@ import os
 import sys
 
 import App
+import Estorno
 from factory_db import *
 from leitura_espelho_db import *
 from audio2 import WavePlayerLoop
@@ -37,6 +38,7 @@ class Leitura(QtWidgets.QMainWindow):
         #BOTÕES
         self.txt_entrada.returnPressed.connect(self.adicionar)
         self.btn_adicionar.clicked.connect(self.adicionar)
+        self.btn_estornar.clicked.connect(self.estornar)
         self.btn_sair.clicked.connect(self.sair)
 
     def abrir_espelho(self, espelho):
@@ -46,7 +48,11 @@ class Leitura(QtWidgets.QMainWindow):
         self.atualizar_label_geral()
     
     def estornar(self):
-        print("estornar!")
+        self.tela_estorno =  Estorno.Estorno(self._espelho)
+        self.tela_estorno.show()
+        self.hide()
+
+
     
     def exportar(self):
         print("Exportar!")
