@@ -1,5 +1,5 @@
 from PyQt5 import uic,QtWidgets
-from PyQt5.QtWidgets import QApplication, QMessageBox, QShortcut
+from PyQt5.QtWidgets import QApplication, QMessageBox, QShortcut, QFileDialog
 from PyQt5.QtGui import QKeySequence, QColor
 #from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
 import os
@@ -11,7 +11,7 @@ from factory_db import *
 from leitura_espelho_db import *
 from audio2 import WavePlayerLoop
 from Alerta import CustomDialog
-from time import sleep
+from exportar import Exportar
 
 class Leitura(QtWidgets.QMainWindow):
     def __init__(self):
@@ -39,10 +39,12 @@ class Leitura(QtWidgets.QMainWindow):
         self.txt_entrada.returnPressed.connect(self.adicionar)
         self.btn_adicionar.clicked.connect(self.adicionar)
         self.btn_estornar.clicked.connect(self.estornar)
+        self.btn_exportar.clicked.connect(self.exportar)
         self.btn_sair.clicked.connect(self.sair)
 
     def abrir_espelho(self, espelho):
         self._espelho = espelho
+        self.atualizar_espelho()
         self.lbl_espelho.setText(f"Espelho: {self._espelho}")
         self.inserir_tabela(leitura_espelho_db.buscar(self._banco.get_cursor(), self._espelho))
         self.atualizar_label_geral()
@@ -52,10 +54,47 @@ class Leitura(QtWidgets.QMainWindow):
         self.tela_estorno.show()
         self.hide()
 
-
+    def atualizar_espelho(self):
+        """Atualizar o volume e peso REAL lido no espelho
+        """        
+        lista_atualizada = leitura_espelho_db.buscar_qtde_etqta_lida(self._banco.get_cursor(), self._espelho)
+        for prod, vol_real, peso_real in lista_atualizada:
+            leitura_espelho_db.atualizar_espelho_lido(self._banco.get_cursor(),\
+                 self._banco.get_conexao(), self._espelho,\
+                      prod, vol_real, peso_real)
     
     def exportar(self):
-        print("Exportar!")
+        formatos = {
+            'csv': "Arq. separado por vírgula (*.csv)",
+            'xlsx': "Arquivo excel (*.xlsx)",
+            'txt': "Arquivo de texto (*.txt)"
+        }
+        try:
+            arquivo = QFileDialog.getSaveFileName(self, "Onde salvar?", "",\
+                (f"{formatos['csv']};;{formatos['xlsx']};;{formatos['txt']}"))
+
+            if arquivo[1] == formatos['csv']:
+                Exportar.exp_to_csv(self._banco.get_conexao(), self._espelho, arquivo[0])
+            elif arquivo[1] == formatos['xlsx']:
+                Exportar.exp_to_excel(self._banco.get_conexao(), self._espelho, arquivo[0])
+            elif arquivo[1] == formatos['txt']:
+                Exportar.exp_to_txt(self._banco.get_conexao(), self._espelho, arquivo[0])
+            
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Information)
+            msg_box.setWindowTitle("Notificação")
+            msg_box.setText("Arquivo salvo com sucesso!")
+            
+            return_value = msg_box.exec()
+            
+        except Exception as e:
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Critical)
+            msg_box.setWindowTitle("ERRO")
+            msg_box.setText("Erro ao salvar arquivo!")
+            msg_box.setDetailedText(str(e))
+            return_value = msg_box.exec()
+
 
     def sair(self):
         self.tela = App.Main_Window()
@@ -108,7 +147,7 @@ class Leitura(QtWidgets.QMainWindow):
                 inclusao = 3
 
             if inclusao == 1:
-                volume_real, peso_real = leitura_espelho_db.buscar_qtde_etqta_lida(self._banco.get_cursor(),\
+                volume_real, peso_real = leitura_espelho_db.buscar_qtde_etqta_lida_produto(self._banco.get_cursor(),\
                 self._espelho, produto)
                 leitura_espelho_db.atualizar_espelho_lido(self._banco.get_cursor(),\
                 self._banco.get_conexao(), self._espelho, produto, volume_real, peso_real)
@@ -159,7 +198,7 @@ class Leitura(QtWidgets.QMainWindow):
             return False
 
     def verificar_volume(self, etiqueta):
-        espelho = leitura_espelho_db.buscar_etiqueta(self._banco.get_cursor(), etiqueta)[0]
+        espelho = leitura_espelho_db.buscar_etiqueta(self._banco.get_cursor(), etiqueta)
         if espelho == self._espelho:
             #print("Etiqueta já pertence ao espelho!")
             return 2

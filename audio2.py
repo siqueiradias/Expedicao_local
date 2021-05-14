@@ -1,5 +1,5 @@
 import pygame
-import wave
+#import wave
 import os
 import threading
 from time import sleep

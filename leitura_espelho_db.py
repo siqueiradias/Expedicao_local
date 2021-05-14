@@ -57,11 +57,14 @@ class leitura_espelho_db:
             [str]: [espelho relacionado a etiqueta]
         """                 
         try:
-            result = cur_db.execute(f"""SELECT
+            cur_db.execute(f"""SELECT
              espelho FROM tb_carregamento
               WHERE volume = '{etiqueta}';""")
-            for busca in result:
-                return busca
+            busca = cur_db.fetchall()
+            if len(busca) > 0:
+                return busca[0][0]
+            else:
+                return None
         except Exception as e:
             print('Erro na buscar_etiqueta: ', e)
             r = None
@@ -99,7 +102,31 @@ class leitura_espelho_db:
             return r
         
     @staticmethod
-    def buscar_qtde_etqta_lida(cur_db, espelho, produto):
+    def buscar_qtde_etqta_lida(cur_db, espelho):
+        """Buscar a quantidade de volumes lidas por produto
+
+        Args:
+            cur_db (cursor): Cursor de acesso ao banco de dados
+            espelho (str): espelho de carregamento
+
+        Returns:
+            list: Lista de tuplas(cod_produto, vol_real, peso_real)
+        """        
+        try:
+            lista_atualizada = list()
+            result = cur_db.execute(f"""SELECT produto, count(*), sum(peso) FROM tb_carregamento 
+             INNER JOIN tb_produto on tb_produto.cod = tb_carregamento.produto
+              WHERE espelho = '{espelho}' GROUP BY produto;""")
+            for busca in result:
+                lista_atualizada.append((busca))
+            return lista_atualizada
+        except Exception as e:
+            print('Erro na Busca etiquetas lidas: ', e)
+            r = (000, 0, 0.0)
+            return r
+    
+    @staticmethod
+    def buscar_qtde_etqta_lida_produto(cur_db, espelho, produto):
         try:
             result = cur_db.execute(f"""SELECT
              COUNT(volume), peso*COUNT(volume)
@@ -109,7 +136,7 @@ class leitura_espelho_db:
             for busca in result:
                 return busca
         except Exception as e:
-            print('Erro na Busca etiquetas lidas: ', e)
+            print('Erro na Busca etiquetas lidas por produto: ', e)
             r = (0, 0.0)
             return r
 
@@ -141,7 +168,6 @@ class leitura_espelho_db:
         except sqlite3.IntegrityError as e:
             print("Erro no SQL: ", e)
             return 2
-
         except Exception as e:
             print("Erro ao incluir volume: ", e)
             return 3
