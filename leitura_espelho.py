@@ -114,9 +114,12 @@ class Leitura(QtWidgets.QMainWindow):
                 if etiqueta[0] == '0':
                     #print('produto: ', etiqueta[4:8])
                     produto = int(etiqueta[4:8])
-                else:
+                elif etiqueta[0:2] == '22':
                     #print('produto: ', etiqueta[6:9])
                     produto = int(etiqueta[6:9])
+                else:
+                    #Produto Bonasa
+                    produto = int(etiqueta[1:5])
             elif len(etiqueta) == 20 and etiqueta.isnumeric():
                 #print('produto: ', etiqueta[4:10])
                 produto = int(etiqueta[4:10])

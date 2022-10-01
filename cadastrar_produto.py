@@ -46,9 +46,14 @@ class CadastrarProduto(QtWidgets.QMainWindow):
         descricao = self.txt_desc.text()
         peso_liq = float(self.txt_peso_liq.text().replace(',', '.'))
         
-        op = cadastrar_produto_db.inserir(self._banco.get_cursor(), self._banco.get_conexao(), cod_produto, descricao, peso_liq)
+        try:
+            op = cadastrar_produto_db.inserir(self._banco.get_cursor(), self._banco.get_conexao(), cod_produto, descricao, peso_liq)
+            print(type(op))
+            print(op)
+        except Exception as e:
+            print("Erro: ", e)
         
-        if op[0] == 1:
+        if op == 1:
             #print(f"Cod.: {cod_produto} - {descricao} - {peso_liq}Kg") 
             msg_box = QMessageBox()
             msg_box.setIcon(QMessageBox.Information)
