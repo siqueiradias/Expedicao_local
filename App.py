@@ -1,11 +1,6 @@
 from PyQt5 import uic,QtWidgets
 from PyQt5.QtWidgets import QApplication, QMessageBox, QShortcut, QFileDialog
 from PyQt5.QtGui import QKeySequence
-#from PyQt5.QtWidgets import QApplication,  QWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QMenuBar, QMenu, QAction
-#from PyKDE4.kdeui import KDateComboBox
-#import sqlite3
-#import datetime
-import os
 import sys
 
 import leitura_espelho
@@ -13,7 +8,6 @@ import cadastrar_espelho
 from exportar import Exportar
 from factory_db import factory_db
 from cadastrar_espelho_db import cadastrar_espelho_db
-
 
 class Main_Window(QtWidgets.QMainWindow):
     def __init__(self):
@@ -38,10 +32,10 @@ class Main_Window(QtWidgets.QMainWindow):
         self.shortcut_exportar.activated.connect(self.abrir)
 
         self.shortcut_sair = QShortcut(QKeySequence("Alt+S"), self)
-        self.shortcut_sair.activated.connect(exit)
+        self.shortcut_sair.activated.connect(sys.exit)
 
         #BOTÕES
-        self.btn_sair.clicked.connect(exit)
+        self.btn_sair.clicked.connect(sys.exit)
         self.btn_cadastrar.clicked.connect(self.cadastrar_espelho)
         self.btn_abrir.clicked.connect(self.abrir)
         self.btn_exportar.clicked.connect(self.exportar)
@@ -122,7 +116,10 @@ class Main_Window(QtWidgets.QMainWindow):
             return_value = msg_box.exec()
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    w = Main_Window()
-    w.show()
+    try:
+        app = QApplication(sys.argv)
+        w = Main_Window()
+        w.show()
+    except Exception as e:
+        print(e)
     sys.exit(app.exec_())
